@@ -12,6 +12,8 @@ By leveraging human spatial memory instead of visual lists, SlotCopy functions s
 
 ## The Problem It Solves
 
+**The Multiple-Block Overhead:** Consider the scenario where you need to copy multiple separate blocks of text from one webpage to another document. Traditionally, you must: copy block 1 -> switch windows -> paste -> switch back -> locate block 2 -> copy -> repeat. The continuous window switching and the distraction of constantly re-finding your place on the source page is a massive workflow bottleneck.
+
 Standard clipboard managers—including native OS solutions like `Win+V`—rely heavily on the **History Model**. Every time you copy something new, your previous items shift down a visual list. Retrieving an older item requires you to:
 1. Trigger the clipboard UI.
 2. Break your visual focus from your current task.
