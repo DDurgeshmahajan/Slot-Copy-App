@@ -20,7 +20,14 @@ Standard clipboard managers—including native OS solutions like `Win+V`—rely 
 
 This process induces a **Context Switch**. Studies in productivity show that even minor context switches drastically increase cognitive load and drain mental energy, breaking the user's "Flow State."
 
-**SlotCopy eliminates the visual search.** If you assign your database connection string to Slot 1, it will *always* be Slot 1. You don't look for it; your fingers just know where it is. By minimizing the friction of data movement to a sheer hardware-level shortcut, SlotCopy radically reduces cognitive load.
+**The Multiple-Block Overhead:** Consider the scenario where you need to copy multiple separate blocks of text from one webpage to another document. Traditionally, you must: copy block 1 -> switch windows -> paste -> switch back -> locate block 2 -> copy -> repeat. The continuous window switching and the distraction of constantly re-finding your place on the source page is a massive workflow bottleneck.
+
+**SlotCopy eliminates these bottlenecks.** 
+- **No Visual Search:** If you assign your database connection string to Slot 1, it will *always* be Slot 1. You don't look for it; your fingers just know where it is. 
+- **Batch Copying:** You can stay on your source page, copy multiple blocks of text one after another into slots 1 through 9, and then switch to your target document just *once* to paste them sequentially. 
+- **Protected Main Memory:** Standard copy/paste continues to work seamlessly alongside your slots, meaning you never disturb your primary OS clipboard memory. 
+
+By minimizing the friction of data movement to a sheer hardware-level shortcut, SlotCopy radically reduces cognitive load and preserves your focus.
 
 ---
 
