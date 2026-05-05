@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SlotCopyApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+60db489da5eb4a0be7794738086667da9efa705d")]
 [assembly: System.Reflection.AssemblyProductAttribute("SlotCopyApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SlotCopyApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
