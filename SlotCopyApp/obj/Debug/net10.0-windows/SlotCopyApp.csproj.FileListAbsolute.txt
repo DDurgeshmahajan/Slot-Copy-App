@@ -12,3 +12,4 @@ D:\slotcopyproject\SlotCopyApp\obj\Debug\net10.0-windows\refint\SlotCopyApp.dll
 D:\slotcopyproject\SlotCopyApp\obj\Debug\net10.0-windows\SlotCopyApp.pdb
 D:\slotcopyproject\SlotCopyApp\obj\Debug\net10.0-windows\SlotCopyApp.genruntimeconfig.cache
 D:\slotcopyproject\SlotCopyApp\obj\Debug\net10.0-windows\ref\SlotCopyApp.dll
+D:\slotcopyproject\SlotCopyApp\obj\Debug\net10.0-windows\SlotCopyApp.sourcelink.json

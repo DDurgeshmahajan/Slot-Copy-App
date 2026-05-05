@@ -123,7 +123,6 @@ namespace SlotCopyApp
             {
                 string original = Clipboard.ContainsText() ? Clipboard.GetText() : null;
                 Clipboard.SetText(_slots[slot]);
-                OSD.Show($"Pasted Slot {slot}");
                 SendPasteSimulated();
                 Thread.Sleep(75);
                 if (original != null) Clipboard.SetText(original);

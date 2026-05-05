@@ -8,8 +8,28 @@ namespace SlotCopyApp
     public static class OSD
     {
         private static SynchronizationContext _uiContext;
-        private static Form _osdForm;
+        private static OSDForm _osdForm;
+        private static System.Windows.Forms.Timer _timer;
 
+        private class OSDForm : Form
+        {
+            public OSDForm()
+            {
+                this.DoubleBuffered = true;
+            }
+
+            protected override bool ShowWithoutActivation => true;
+            protected override CreateParams CreateParams
+            {
+                get
+                {
+                    CreateParams cp = base.CreateParams;
+                    cp.ExStyle |= 0x08000000; // WS_EX_NOACTIVATE
+                    cp.ExStyle |= 0x00000020; // WS_EX_TRANSPARENT (Click-through)
+                    return cp;
+                }
+            }
+        }
 
         public static void Initialize(SynchronizationContext context)
         {
@@ -18,53 +38,62 @@ namespace SlotCopyApp
 
         public static void Show(string message)
         {
-
             if (_uiContext == null) return;
-
 
             _uiContext.Post(_ =>
             {
                 try
                 {
-                    _osdForm?.Close();
-
-                    _osdForm = new Form
+                    if (_osdForm == null || _osdForm.IsDisposed)
                     {
-                        Size = new Size(220, 50),
-                        FormBorderStyle = FormBorderStyle.None,
-                        StartPosition = FormStartPosition.Manual,
-                        TopMost = true,
-                        ShowInTaskbar = false,
-                        BackColor = Color.FromArgb(20, 20, 20),
-                        Opacity = 0.85
-                    };
+                        _osdForm = new OSDForm
+                        {
+                            Size = new Size(220, 50),
+                            FormBorderStyle = FormBorderStyle.None,
+                            StartPosition = FormStartPosition.Manual,
+                            TopMost = true,
+                            ShowInTaskbar = false,
+                            BackColor = Color.FromArgb(20, 20, 20),
+                            Opacity = 0
+                        };
 
-                    Label lbl = new Label
+                        Label lbl = new Label
+                        {
+                            Name = "MessageLabel",
+                            Text = message,
+                            ForeColor = Color.White,
+                            BackColor = Color.Transparent,
+                            TextAlign = ContentAlignment.MiddleCenter,
+                            Dock = DockStyle.Fill,
+                            Font = new Font("Segoe UI", 11, FontStyle.Bold)
+                        };
+
+                        _osdForm.Controls.Add(lbl);
+
+                        var area = Screen.PrimaryScreen.WorkingArea;
+                        _osdForm.Location = new Point(area.Right - 230, area.Bottom - 60);
+                        _osdForm.Show();
+                    }
+
+                    _osdForm.Controls["MessageLabel"].Text = message;
+                    _osdForm.Opacity = 0.85;
+
+                    if (_timer != null)
                     {
-                        Text = message,
-                        ForeColor = Color.White,
-                        TextAlign = ContentAlignment.MiddleCenter,
-                        Dock = DockStyle.Fill,
-                        Font = new Font("Segoe UI", 11, FontStyle.Bold)
-                    };
+                        _timer.Stop();
+                        _timer.Dispose();
+                    }
 
-                    _osdForm.Controls.Add(lbl);
-
-
-                    var area = Screen.PrimaryScreen.WorkingArea;
-                    _osdForm.Location = new Point(area.Right - 230, area.Bottom - 60);
-
-                    _osdForm.Show();
-
-
-                    var timer = new System.Windows.Forms.Timer { Interval = 1500 };
-                    timer.Tick += (s, e) =>
+                    _timer = new System.Windows.Forms.Timer { Interval = 1500 };
+                    _timer.Tick += (s, e) =>
                     {
-                        _osdForm?.Close();
-                        timer.Stop();
-                        timer.Dispose();
+                        if (_osdForm != null && !_osdForm.IsDisposed)
+                        {
+                            _osdForm.Opacity = 0;
+                        }
+                        _timer.Stop();
                     };
-                    timer.Start();
+                    _timer.Start();
                 }
                 catch { /*fail silently*/ }
             }, null);
