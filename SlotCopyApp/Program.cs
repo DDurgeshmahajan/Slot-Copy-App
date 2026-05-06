@@ -3,16 +3,25 @@ namespace SlotCopyApp;
 using Microsoft.Win32;
 
 
+using System.Threading;
+
 static class Program
 {
+    static Mutex mutex = new Mutex(true, "{SlotCopyApp-Unique-Mutex-123}");
+
     [STAThread]
     static void Main()
     {
+        if (!mutex.WaitOne(TimeSpan.Zero, true))
+        {
+            MessageBox.Show("SlotCopy is already running in the background!\n\nCheck your system tray (bottom right corner near the clock) for the icon.", "SlotCopy Running", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
         ApplicationConfiguration.Initialize();
 
         using (TrayContext context = new TrayContext())
         {
-            // Capture the UI thread context after TrayContext creates a dummy form handle
             OSD.Initialize(SynchronizationContext.Current);
             Application.Run(context);
         }
@@ -76,6 +85,16 @@ public class TrayContext : ApplicationContext
         startupMenuItem.Checked = isStartup;
         startupMenuItem.CheckedChanged += (s, e) => SetStartup(startupMenuItem.Checked);
 
+        var slotsMenuItem = new ToolStripMenuItem("Slots Texts");
+        slotsMenuItem.Click += (s, e) =>
+        {
+            var slots = _hook.GetSlots();
+            SlotsListForm form = new SlotsListForm(slots);
+            form.Show();
+        };
+
+        _trayIcon.ContextMenuStrip.Items.Add(slotsMenuItem);
+        _trayIcon.ContextMenuStrip.Items.Add(new ToolStripSeparator());
         _trayIcon.ContextMenuStrip.Items.Add(startupMenuItem);
         _trayIcon.ContextMenuStrip.Items.Add(new ToolStripSeparator());
         _trayIcon.ContextMenuStrip.Items.Add("Exit", null, (s, e) =>
@@ -85,7 +104,23 @@ public class TrayContext : ApplicationContext
             Application.Exit();
         });
 
-        // Sync startup path in case the app was moved to a different directory
         if (isStartup) SetStartup(true);
+
+        CheckFirstRun();
+    }
+
+    private void CheckFirstRun()
+    {
+        string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        string appFolder = Path.Combine(appData, "SlotCopyApp");
+        System.IO.Directory.CreateDirectory(appFolder);
+        string markerPath = Path.Combine(appFolder, ".has_run");
+
+        if (!System.IO.File.Exists(markerPath))
+        {
+            System.IO.File.WriteAllText(markerPath, "1");
+            WelcomeForm welcome = new WelcomeForm();
+            welcome.Show();
+        }
     }
 }

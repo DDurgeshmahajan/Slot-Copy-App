@@ -26,10 +26,15 @@ namespace SlotCopyApp
         private bool _suppressNextV = false;
 
         private static readonly SemaphoreSlim _clipboardLock = new SemaphoreSlim(1, 1);
-        private string _savePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "slots.json");
+        private string _savePath;
 
         public GlobalKeyboardHook()
         {
+            string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string appFolder = Path.Combine(appData, "SlotCopyApp");
+            Directory.CreateDirectory(appFolder);
+            _savePath = Path.Combine(appFolder, "slots.json");
+
             LoadFromDisk();
             _proc = HookCallback;
             _hookID = SetHook(_proc);
@@ -141,7 +146,10 @@ namespace SlotCopyApp
             try
             {
                 if (File.Exists(_savePath))
-                    _slots = JsonSerializer.Deserialize<Dictionary<int, string>>(File.ReadAllText(_savePath));
+                {
+                    var loaded = JsonSerializer.Deserialize<Dictionary<int, string>>(File.ReadAllText(_savePath));
+                    if (loaded != null) _slots = loaded;
+                }
             }
             catch { }
         }
@@ -174,5 +182,18 @@ namespace SlotCopyApp
         }
 
         public void Unhook() => Win32Interop.UnhookWindowsHookEx(_hookID);
+
+        public Dictionary<int, string> GetSlots()
+        {
+            _clipboardLock.Wait();
+            try
+            {
+                return new Dictionary<int, string>(_slots);
+            }
+            finally
+            {
+                _clipboardLock.Release();
+            }
+        }
     }
 }
