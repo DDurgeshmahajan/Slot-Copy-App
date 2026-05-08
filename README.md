@@ -6,18 +6,20 @@
 [![Platform](https://img.shields.io/badge/Platform-Windows-blue?style=for-the-badge&logo=windows)](https://github.com/DDurgeshmahajan/Slot-Copy-App)
 [![License](https://img.shields.io/badge/License-MIT-orange?style=for-the-badge)](LICENSE)
 
+SlotCopy reimagines clipboard management by moving away from the "History Model" to a "Slot Model," leveraging human spatial memory to eliminate the need for visual searching.
 
+---
 
-## 🌐 Our Website is Live!
-We are excited to announce that SlotCopy is now officially available for download via our landing page:
+## 🌐 Live Website & Downloads
+SlotCopy is officially available for download via our landing page:
 ### 👉 [**Download SlotCopy at slotcopyapp.web.app**](https://slotcopyapp.web.app/)
 
-The website provides a clean interface to explore features, view documentation, and get the latest stable build of the application.
+The website provides a clean interface to explore features, view documentation, and get the latest stable build.
 
 ---
 
 ## 💡 The Philosophy: Human Spatial Memory
-Standard clipboard managers (including Windows' `Win+V`) rely on the **History Model**. Every time you copy, items shift down a list, forcing you to visually scan and search for what you need. This breaks your **Flow State**.
+Standard clipboard managers (including Windows' `Win+V`) rely on a shifting list. Every time you copy, items move, forcing you to visually scan for what you need. This breaks your **Flow State**.
 
 **SlotCopy** implements the **Slot Model**. By binding snippets to dedicated hardware keys (1-9), we leverage your brain's spatial memory. 
 - **No Visual Searching:** Your database connection string is always Slot 1. You don't look for it; your fingers just know.
@@ -25,56 +27,98 @@ Standard clipboard managers (including Windows' `Win+V`) rely on the **History M
 
 ---
 
-## 🚀 Key Features
-- **⚡ Kernel-Level Speed:** Built using low-level Win32 hooks for near-zero latency.
-- **🎯 Invisible UX:** Operates in the background with a minimalist On-Screen Display (OSD) for feedback.
-- **🛡️ Clipboard Preservation:** Your standard `Ctrl+C` / `Ctrl+V` workflow remains untouched.
-- **💾 Persistence:** Slots are automatically saved and restored across system restarts.
-- **🧩 Web Companion:** Check out the live demo and downloads at our [Web Portal](https://slotcopyapp.web.app/).
+## 📖 User Guide
+
+### 1. Installation & Setup
+1. Download the latest installer from [slotcopyapp.web.app](https://slotcopyapp.web.app/).
+2. Run `SlotCopy.exe`.
+3. Upon first run, a **Welcome Screen** will guide you through the basic shortcuts.
+4. The application lives in your **System Tray** (near the clock).
+
+### 2. Core Interaction Model
+SlotCopy uses timing-based hotkeys to stay out of your way until you need it.
+
+| Action | Shortcut | Details |
+| :--- | :--- | :--- |
+| **Save to Slot** | `Ctrl + C` then `1-9` | Press `Ctrl+C` and within 500ms, tap a number key. |
+| **Paste from Slot** | `Hold Ctrl + V` then `1-9` | Hold `Ctrl+V` for >150ms, then tap the slot number. |
+| **Standard Paste** | `Ctrl + V` (Tap) | Tapping `Ctrl+V` works normally without triggering slots. |
+
+### 3. Managing Slots
+- **View All Slots:** Right-click the tray icon and select **"Slots Texts"**. This opens a window showing all saved snippets.
+- **Auto-Start:** Right-click the tray icon and toggle **"Start with Windows"** to ensure SlotCopy is always ready.
 
 ---
 
-## 🛠️ How to Use
+## 🛠️ Technical Implementation
 
-### 1. Saving to a Slot
-1. Highlight text and press `Ctrl + C`.
-2. Within **500ms**, tap a number key (**1-9**).
-3. *Done!* The snippet is now bound to that slot.
+SlotCopy is built with a focus on low-latency and system-wide integration using the .NET framework and Win32 APIs.
 
-### 2. Pasting from a Slot
-1. **Hold** the `V` key.
-2. Tap the slot number (**1-9**).
-3. *Instant Paste.*
+### 1. Low-Level Keyboard Hooking
+The core engine uses `SetWindowsHookEx` with the `WH_KEYBOARD_LL` (Low-Level Keyboard Hook) procedure. This allows SlotCopy to intercept keystrokes before they reach the active application.
+- **Timing Engine:** Uses a high-precision `Stopwatch` to differentiate between a standard `Ctrl+V` tap and a "Hold" gesture.
+- **Event Suppression:** When a SlotCopy trigger is detected, the event is consumed (returns `(IntPtr)1`), preventing the character from being typed into the active window.
 
-### 3. Standard Pasting
-- Just tap `V` quickly (under 250ms) or use `Ctrl + V` as usual. SlotCopy intelligently distinguishes between a "Hold" and a "Tap".
+### 2. The "Snapshot" Paste Pattern
+To ensure compatibility with every Windows application, SlotCopy uses a non-destructive clipboard swap:
+1. **Save Current:** The current system clipboard content is cached in memory.
+2. **Inject Slot:** The system clipboard is replaced with the content from the selected slot.
+3. **Simulate Input:** A hardware-level `Ctrl+V` event is simulated using `keybd_event`.
+4. **Restore:** After a small delay (75ms to ensure the target app has processed the paste), the original clipboard content is restored.
+
+### 3. Thread Safety & STA Model
+The Windows Clipboard API is strictly Single-Threaded Apartment (STA). SlotCopy manages this by:
+- Spawning dedicated STA background threads for all clipboard operations.
+- Using `SemaphoreSlim` to prevent race conditions when multiple slots are accessed rapidly.
+
+### 4. Persistence Layer
+Slots are persisted to the local disk using high-speed JSON serialization.
+- **Location:** `%AppData%\SlotCopyApp\slots.json`
+- **Mechanism:** Automatic save on capture and lazy loading on application startup.
 
 ---
 
-## 🏗️ Technical Architecture
-SlotCopy is engineered at the intersection of Kernel events and User-mode logic:
+## 🏗️ Project Structure
 
-- **Low-Level Hooks (`WH_KEYBOARD_LL`):** Pre-emptively intercepts keystrokes at the OS level to manage timing-based logic gates.
-- **STA Thread Marshalling:** Manages the volatile Windows Clipboard via a dedicated Single Threaded Apartment (STA) background thread to ensure thread safety and prevent UI hangs.
-- **State Machine Logic:** Uses high-precision `Stopwatch` intervals to distinguish between standard OS commands and SlotCopy triggers.
-- **Snapshot Pattern:** Pastes data by temporarily swapping the clipboard content and restoring it in <75ms, preserving your actual clipboard history.
+```mermaid
+graph TD
+    A[SlotCopy Project] --> B[SlotCopyApp - Windows Client]
+    A --> C[SlotCopyWeb - Web Companion]
+    
+    B --> B1[GlobalKeyboardHook.cs - Hook Logic]
+    B --> B2[OSD.cs - HUD Display]
+    B --> B3[Program.cs - Lifecycle & Tray]
+    
+    C --> C1[Landing Page]
+    C --> C2[Firebase Hosting]
+```
+
+- **SlotCopyApp:** The main C# Windows Forms application handling hooks and logic.
+- **SlotCopyWeb:** A sleek landing page built for distribution and user onboarding.
+- **Assets:** Contains the design tokens, logos, and high-quality mockups used across the project.
 
 ---
 
-## 📥 Getting Started
-1. Visit [slotcopyapp.web.app](https://slotcopyapp.web.app/).
-2. Download the latest installer.
-3. Run `SlotCopy.exe`.
-4. Check your System Tray for the icon.
+## 📥 Development Setup
+If you wish to build SlotCopy from source:
+1. Clone the repository: `git clone https://github.com/DDurgeshmahajan/Slot-Copy-App.git`
+2. Open `slotcopyproject.sln` in Visual Studio 2022.
+3. Ensure you have the **.NET Desktop Development** workload installed.
+4. Build and run in `Release` mode for optimal performance.
 
 ---
 
 ## 🤝 Contributing
-Contributions are welcome! If you're a .NET developer interested in low-level Windows APIs, feel free to open a PR or an issue.
+We welcome contributions!
+1. Fork the Project.
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`).
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`).
+4. Push to the Branch (`git push origin feature/AmazingFeature`).
+5. Open a Pull Request.
 
 **License:** Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
 <p align="center">
-  Built with ❤️ for power users.
+  Built with ❤️ by <a href="https://github.com/DDurgeshmahajan">Durgesh Mahajan</a>
 </p>
