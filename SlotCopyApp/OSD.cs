@@ -26,6 +26,8 @@ namespace SlotCopyApp
                     CreateParams cp = base.CreateParams;
                     cp.ExStyle |= 0x08000000; // WS_EX_NOACTIVATE
                     cp.ExStyle |= 0x00000020; // WS_EX_TRANSPARENT (Click-through)
+                    cp.ExStyle |= 0x00000008; // WS_EX_TOPMOST
+                    cp.ExStyle |= 0x00000080; // WS_EX_TOOLWINDOW
                     return cp;
                 }
             }
@@ -38,6 +40,12 @@ namespace SlotCopyApp
 
         public static void Show(string message)
         {
+            // Try to recover context if it was null (might happen if initialized too early)
+            if (_uiContext == null)
+            {
+                _uiContext = SynchronizationContext.Current;
+            }
+
             if (_uiContext == null) return;
 
             _uiContext.Post(_ =>
@@ -69,14 +77,17 @@ namespace SlotCopyApp
                         };
 
                         _osdForm.Controls.Add(lbl);
-
-                        var area = Screen.PrimaryScreen.WorkingArea;
-                        _osdForm.Location = new Point(area.Right - 230, area.Bottom - 60);
                         _osdForm.Show();
                     }
 
+                    // Always update location in case screen resolution or primary screen changed
+                    var area = Screen.PrimaryScreen.WorkingArea;
+                    _osdForm.Location = new Point(area.Right - 230, area.Bottom - 60);
+                    
                     _osdForm.Controls["MessageLabel"].Text = message;
                     _osdForm.Opacity = 0.85;
+                    _osdForm.TopMost = true;
+                    _osdForm.BringToFront();
 
                     if (_timer != null)
                     {
@@ -95,8 +106,16 @@ namespace SlotCopyApp
                     };
                     _timer.Start();
                 }
-                catch { /*fail silently*/ }
+                catch 
+                { 
+                    // If something went wrong, let's try to reset the form for next time
+                    if (_osdForm != null)
+                    {
+                        try { _osdForm.Dispose(); } catch { }
+                        _osdForm = null;
+                    }
+                }
             }, null);
         }
     }
-}
+}

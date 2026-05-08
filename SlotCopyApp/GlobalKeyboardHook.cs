@@ -111,12 +111,30 @@ namespace SlotCopyApp
             _clipboardLock.Wait();
             try
             {
+                // Give the target app a moment to finish copying to clipboard
+                Thread.Sleep(50);
+                
                 if (Clipboard.ContainsText())
                 {
                     _slots[slot] = Clipboard.GetText();
                     SaveToDisk();
                     OSD.Show($"Slot {slot} Saved");
                 }
+                else
+                {
+                    // If clipboard is empty or busy, try one more time after a short delay
+                    Thread.Sleep(100);
+                    if (Clipboard.ContainsText())
+                    {
+                        _slots[slot] = Clipboard.GetText();
+                        SaveToDisk();
+                        OSD.Show($"Slot {slot} Saved");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Optional: log or handle error
             }
             finally { _clipboardLock.Release(); }
         }
@@ -126,11 +144,18 @@ namespace SlotCopyApp
             _clipboardLock.Wait();
             try
             {
-                string original = Clipboard.ContainsText() ? Clipboard.GetText() : null;
-                Clipboard.SetText(_slots[slot]);
-                SendPasteSimulated();
-                Thread.Sleep(75);
-                if (original != null) Clipboard.SetText(original);
+                if (_slots.ContainsKey(slot))
+                {
+                    string original = Clipboard.ContainsText() ? Clipboard.GetText() : null;
+                    Clipboard.SetText(_slots[slot]);
+                    
+                    OSD.Show($"Pasting Slot {slot}");
+                    
+                    SendPasteSimulated();
+                    Thread.Sleep(100); // Wait for paste to complete
+                    
+                    if (original != null) Clipboard.SetText(original);
+                }
             }
             catch { }
             finally { _clipboardLock.Release(); }
