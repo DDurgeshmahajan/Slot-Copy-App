@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SlotCopy — The Clipboard Upgrade for Power Users</title>
+  <meta name="description"
+    content="SlotCopy is a high-performance, slot-based clipboard manager for Windows. 9 persistent slots, zero lag, invisible background operation. Built for developers, researchers, and power users." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <div class="nav-inner">
+      <div class="nav-logo">
+        <div class="logo-icon">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <rect x="4" y="2" width="16" height="22" rx="2" fill="none" stroke="#0078d4" stroke-width="2" />
+            <rect x="9" y="0" width="6" height="5" rx="1" fill="#0078d4" />
+            <text x="6" y="19" font-family="Inter" font-size="7" font-weight="700" fill="#0078d4">1-9</text>
+            <circle cx="22" cy="22" r="5" fill="#0078d4" opacity="0.9" />
+            <path d="M20 22l1.5 1.5L24 20" stroke="white" stroke-width="1.5" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+        </div>
+        <span class="logo-text">SlotCopy</span>
+      </div>
+      <div class="nav-links">
+        <a href="#problem">The Problem</a>
+        <a href="#features">Features</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#tech">Architecture</a>
+        <a href="#download" class="nav-cta">Download Free</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-bg-grid"></div>
+    <div class="hero-glow"></div>
+    <div class="container hero-content">
+      <div class="badge-pill">
+        <span class="badge-dot"></span>
+        Windows 10 &amp; 11 · Free · No Install Required
+      </div>
+      <h1 class="hero-title">
+        Your Clipboard,<br />
+        <span class="gradient-text">Supercharged.</span>
+      </h1>
+      <p class="hero-subtitle">
+        9 persistent slots. Sub-100ms response. Zero friction.<br />
+        Copy smarter — never switch windows again.
+      </p>
+      <div class="hero-actions">
+        <a href="#download" class="btn-primary" id="hero-download-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+          Download for Windows
+        </a>
+        <a href="#how-it-works" class="btn-ghost">See How It Works →</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-num">&lt;100ms</span><span class="stat-label">Response Time</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">9</span><span class="stat-label">Persistent Slots</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">0</span><span class="stat-label">Context Switches</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">∞</span><span class="stat-label">Saved Across Reboots</span></div>
+      </div>
+    </div>
+
+    <!-- Animated keyboard demo -->
+    <div class="keyboard-demo" aria-hidden="true">
+      <div class="demo-label">Live Demo</div>
+      <div class="demo-sequence" id="demo-seq">
+        <div class="demo-step active" data-step="0">
+          <kbd class="key key-ctrl">Ctrl</kbd>
+          <span class="key-plus">+</span>
+          <kbd class="key key-c">C</kbd>
+          <span class="demo-desc">Copy text normally</span>
+        </div>
+        <div class="demo-step" data-step="1">
+          <kbd class="key key-ctrl">Ctrl</kbd>
+          <span class="key-plus">+</span>
+          <kbd class="key key-num">3</kbd>
+          <span class="demo-desc">Save to Slot 3</span>
+        </div>
+        <div class="demo-step" data-step="2">
+          <kbd class="key key-ctrl">Ctrl</kbd>
+          <span class="key-plus">+</span>
+          <kbd class="key key-v key-hold">V</kbd>
+          <span class="key-plus">+</span>
+          <kbd class="key key-num">3</kbd>
+          <span class="demo-desc">Paste from Slot 3 — instantly</span>
+        </div>
+        <div class="demo-step" data-step="3">
+          <div class="osd-preview">✓ Slot 3 Pasted</div>
+          <span class="demo-desc">On-screen confirmation</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section id="problem">
+    <div class="container">
+      <div class="section-tag">The Problem</div>
+      <h2 class="section-title">The Hidden Tax on Your Productivity</h2>
+      <p class="section-sub">Every time you juggle the clipboard, you pay a cognitive toll you don't even notice — until
+        now.</p>
+
+      <div class="problem-grid">
+        <div class="problem-card problem-bad">
+          <div class="problem-card-label bad-label">❌ Without SlotCopy</div>
+          <div class="workflow-steps">
+            <div class="wf-step">Copy block 1</div>
+            <div class="wf-arrow">↓</div>
+            <div class="wf-step bad">Switch to target window</div>
+            <div class="wf-arrow">↓</div>
+            <div class="wf-step bad">Paste</div>
+            <div class="wf-arrow">↓</div>
+            <div class="wf-step bad">Switch BACK to source</div>
+            <div class="wf-arrow">↓</div>
+            <div class="wf-step bad">Find your place again</div>
+            <div class="wf-arrow">↓</div>
+            <div class="wf-step bad">Copy block 2… repeat ×N</div>
+          </div>
+          <div class="problem-cost">6+ steps per block · Focus broken · Flow state destroyed</div>
+        </div>
+
+        <div class="problem-vs">VS</div>
+
+        <div class="problem-card problem-good">
+          <div class="problem-card-label good-label">✅ With SlotCopy</div>
+          <div class="workflow-steps">
+            <div class="wf-step good">Ctrl+C → 1 · Save Slot 1</div>
+            <div class="wf-arrow good-arrow">↓</div>
+            <div class="wf-step good">Ctrl+C → 2 · Save Slot 2</div>
+            <div class="wf-arrow good-arrow">↓</div>
+            <div class="wf-step good">Ctrl+C → 3 · Save Slot 3</div>
+            <div class="wf-arrow good-arrow">↓</div>
+            <div class="wf-step good">Switch to target <em>once</em></div>
+            <div class="wf-arrow good-arrow">↓</div>
+            <div class="wf-step good">V+1, V+2, V+3 · Done.</div>
+          </div>
+          <div class="problem-cost good-cost">1 window switch total · Focus intact · Flow state preserved</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="container">
+      <div class="section-tag">Why SlotCopy</div>
+      <h2 class="section-title">Engineered for Speed.<br />Designed to Disappear.</h2>
+      <div class="features-grid">
+
+        <div class="feature-card card-highlight">
+          <div class="feat-icon">⚡</div>
+          <h3>Sub-100ms Performance</h3>
+          <p>Operates below the <strong>Perceptual Threshold</strong>. The slot doesn't "appear" — it just exists.
+            Irrelevant keystrokes bail out in nanoseconds, so you never feel a hook.</p>
+          <div class="feat-badge">Below human perception limit</div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feat-icon">💾</div>
+          <h3>Bulletproof Persistence</h3>
+          <p>Slots survive reboots. Your database connection string saved to Slot 1 on Friday <strong>will be there
+              Monday morning</strong>. JSON disk storage transforms this from a session tool to a Personal Knowledge
+            Base.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feat-icon">🔒</div>
+          <h3>Zero Friction Coexistence</h3>
+          <p><strong>Ctrl+C and Ctrl+V remain 100% untouched.</strong> SlotCopy upgrades your clipboard without
+            replacing it. Progressive Enhancement — new powers, no unlearning required.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feat-icon">👁️</div>
+          <h3>Truly Invisible</h3>
+          <p>Lives in the system tray. No UI in your face, no window to manage. The app is a background service — it
+            only surfaces when <em>you</em> trigger it.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feat-icon">🧠</div>
+          <h3>Spatial Memory Design</h3>
+          <p>Numbered slots map to muscle memory. You don't <em>think</em> "where is my API key?" — your fingers know
+            it's Slot 2. This is the <strong>Two-Tap Rule</strong> in action.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feat-icon">🔁</div>
+          <h3>Smart Clipboard Restore</h3>
+          <p>Pasting from a slot executes a precise Snapshot-Inject-Paste-Restore sequence. Your real clipboard is
+            <strong>never overwritten</strong>. Both systems coexist perfectly.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how-it-works">
+    <div class="container">
+      <div class="section-tag">User Guide</div>
+      <h2 class="section-title">Three Shortcuts.<br />Infinite Workflow.</h2>
+      <p class="section-sub">SlotCopy uses timing-based logic gates — no complex chords, no mode switching. Your
+        existing habits stay completely intact.</p>
+
+      <div class="how-grid">
+        <div class="how-card">
+          <div class="how-number">01</div>
+          <h3>Save to a Slot</h3>
+          <div class="key-combo">
+            <kbd>Ctrl</kbd><span>+</span><kbd>C</kbd>
+            <span class="then">then within 500ms</span>
+            <kbd class="key-blue">1</kbd><span>–</span><kbd class="key-blue">9</kbd>
+          </div>
+          <p>Select any text, press <code>Ctrl+C</code> as usual. Within half a second, press a number key. An on-screen
+            flash confirms the save. Miss the 500ms window? The number key behaves normally — no accidents.</p>
+        </div>
+
+        <div class="how-card">
+          <div class="how-number">02</div>
+          <h3>Paste from a Slot</h3>
+          <div class="key-combo">
+            <kbd class="key-hold-demo">V <span class="hold-label">hold</span></kbd>
+            <span>+</span>
+            <kbd class="key-blue">1</kbd><span>–</span><kbd class="key-blue">9</kbd>
+          </div>
+          <p><strong>Hold</strong> <code>V</code> (don't release), then press the slot number. The text appears
+            instantly in any app. The "V-hold gate" is genius in its simplicity — it's a chord only you know.</p>
+        </div>
+
+        <div class="how-card">
+          <div class="how-number">03</div>
+          <h3>Standard Paste Still Works</h3>
+          <div class="key-combo">
+            <kbd>Ctrl</kbd><span>+</span><kbd>V</kbd>
+            <span class="then">tap quickly (&lt;250ms)</span>
+          </div>
+          <p>A fast tap of <code>Ctrl+V</code> passes right through to the OS as a normal paste. SlotCopy intelligently
+            distinguishes a "tap" from a "hold" — completely transparent to your muscle memory.</p>
+        </div>
+      </div>
+
+      <!-- Slot Grid Visualizer -->
+      <div class="slot-visualizer">
+        <div class="sv-label">Your 9 Persistent Slots — Always Ready</div>
+        <div class="sv-grid">
+          <div class="sv-slot filled" data-slot="1">
+            <span class="sv-num">1</span>
+            <span class="sv-content">const API_KEY = "sk-••••••••"</span>
+          </div>
+          <div class="sv-slot filled" data-slot="2">
+            <span class="sv-num">2</span>
+            <span class="sv-content">SELECT * FROM users WHERE...</span>
+          </div>
+          <div class="sv-slot filled" data-slot="3">
+            <span class="sv-num">3</span>
+            <span class="sv-content">git commit -m "feat: add..."</span>
+          </div>
+          <div class="sv-slot filled" data-slot="4">
+            <span class="sv-num">4</span>
+            <span class="sv-content">john.doe@company.com</span>
+          </div>
+          <div class="sv-slot filled" data-slot="5">
+            <span class="sv-num">5</span>
+            <span class="sv-content">Dear {{Name}}, Thank you for...</span>
+          </div>
+          <div class="sv-slot filled" data-slot="6">
+            <span class="sv-num">6</span>
+            <span class="sv-content">docker run -p 8080:80 ...</span>
+          </div>
+          <div class="sv-slot empty" data-slot="7">
+            <span class="sv-num">7</span>
+            <span class="sv-empty-label">Empty</span>
+          </div>
+          <div class="sv-slot empty" data-slot="8">
+            <span class="sv-num">8</span>
+            <span class="sv-empty-label">Empty</span>
+          </div>
+          <div class="sv-slot empty" data-slot="9">
+            <span class="sv-num">9</span>
+            <span class="sv-empty-label">Empty</span>
+          </div>
+        </div>
+        <div class="sv-note">💡 Slots persist across Windows reboots via JSON storage in AppData</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TECH / ARCHITECTURE -->
+  <section id="tech">
+    <div class="container">
+      <div class="section-tag">Architecture</div>
+      <h2 class="section-title">Built Like a System Utility.<br />Not Just an App.</h2>
+      <p class="section-sub">Four precision-engineered layers operating at the Kernel-to-User boundary. This is why it's
+        fast.</p>
+
+      <div class="arch-layers">
+        <div class="arch-layer">
+          <div class="arch-icon">🖥️</div>
+          <div class="arch-content">
+            <div class="arch-layer-name">Layer 1 · Win32 OS Bridge</div>
+            <h3>Low-Level Keyboard Hook <code>WH_KEYBOARD_LL</code></h3>
+            <p>A system-wide hook installed via <code>SetWindowsHookEx(13)</code> intercepts <em>every</em> keystroke
+              system-wide, before it reaches any application. Irrelevant keys skip through via
+              <code>CallNextHookEx</code> in nanoseconds — zero systemic lag.
+            </p>
+          </div>
+        </div>
+        <div class="arch-connector"></div>
+        <div class="arch-layer">
+          <div class="arch-icon">🧠</div>
+          <div class="arch-content">
+            <div class="arch-layer-name">Layer 2 · Logic Brain</div>
+            <h3>Timing-Based State Machine</h3>
+            <p>Two precision <code>Stopwatch</code> timers gate every action: a <strong>500ms copy window</strong> for
+              slot assignment, and a <strong>150ms V-hold gate</strong> to distinguish paste intent. V-key is swallowed
+              at kernel level and either re-fired as simulated paste or routed to slot paste.</p>
+          </div>
+        </div>
+        <div class="arch-connector"></div>
+        <div class="arch-layer">
+          <div class="arch-icon">🔄</div>
+          <div class="arch-content">
+            <div class="arch-layer-name">Layer 3 · Clipboard Sync &amp; STA Marshalling</div>
+            <h3>Thread-Safe Clipboard Operations</h3>
+            <p>Windows Clipboard requires Single Threaded Apartment (STA) access. Hook thread dispatches via
+              <code>RunInSTA</code>. Paste executes the Snapshot Pattern: save clipboard → inject slot → simulate Ctrl+V
+              → wait 75ms → restore original. Your clipboard history is never corrupted.
+            </p>
+          </div>
+        </div>
+        <div class="arch-connector"></div>
+        <div class="arch-layer">
+          <div class="arch-icon">💾</div>
+          <div class="arch-content">
+            <div class="arch-layer-name">Layer 4 · Persistence &amp; OSD Feedback</div>
+            <h3>Smart Disk I/O + On-Screen Display</h3>
+            <p>Slots stored as raw strings (not DataObject) — bypassing OLE overhead for instant R/W.
+              <code>System.Text.Json</code> serializes to <code>AppData\SlotCopyApp\slots.json</code> <em>only on state
+                change</em>. OSD feedback marshalled to UI thread via <code>SynchronizationContext</code> — zero
+              cross-thread exceptions.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="tech-tags">
+        <span class="tag">.NET 8 WinForms</span>
+        <span class="tag">Win32 API</span>
+        <span class="tag">WH_KEYBOARD_LL</span>
+        <span class="tag">STA Threading</span>
+        <span class="tag">System.Text.Json</span>
+        <span class="tag">SemaphoreSlim</span>
+        <span class="tag">SynchronizationContext</span>
+        <span class="tag">Registry Integration</span>
+        <span class="tag">Self-Contained EXE</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHO IT'S FOR -->
+  <section id="who">
+    <div class="container">
+      <div class="section-tag">Who It's For</div>
+      <h2 class="section-title">Built for Power Users<br />Who Live at the Keyboard.</h2>
+      <div class="persona-grid">
+        <div class="persona-card">
+          <div class="persona-icon">💻</div>
+          <h3>Developers</h3>
+          <p>Stop re-typing database strings, API keys, Docker commands, and git snippets. Slot them once, use them
+            forever.</p>
+        </div>
+        <div class="persona-card">
+          <div class="persona-icon">📊</div>
+          <h3>Data Analysts</h3>
+          <p>Batch-copy multiple cells from a spreadsheet into a report without a single window switch. Pure,
+            uninterrupted flow.</p>
+        </div>
+        <div class="persona-card">
+          <div class="persona-icon">✍️</div>
+          <h3>Writers &amp; Researchers</h3>
+          <p>Collect 9 quotes from a source page in one pass. Switch to your document once. Paste them all sequentially.
+          </p>
+        </div>
+        <div class="persona-card">
+          <div class="persona-icon">🎧</div>
+          <h3>Support &amp; Sales</h3>
+          <p>Hard-code your top email templates, ticket IDs, and response macros. Every reply is two keystrokes — not 30
+            seconds of digging.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DOWNLOAD -->
+  <section id="download">
+    <div class="container download-inner">
+      <div class="dl-glow"></div>
+      <div class="dl-content">
+        <div class="dl-badge">Free · Open Source · No Install Required</div>
+        <h2 class="dl-title">Ready to Work at the<br /><span class="gradient-text">Speed of Thought?</span></h2>
+        <p class="dl-sub">Drop the EXE anywhere. Run it. That's it.<br />No installer, no admin rights, no bloat. Starts
+          with Windows if you want it to.</p>
+
+        <a href="https://github.com/DDurgeshmahajan/Slot-Copy-App/releases/download/app/SlotCopyApp.exe"
+          id="main-download-btn" class="btn-download" target="_blank" rel="noopener">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+          Download SlotCopyApp.exe
+          <span class="dl-platform">Windows 10 / 11 · x64</span>
+        </a>
+
+        <div class="dl-meta">
+          <a href="https://github.com/DDurgeshmahajan/Slot-Copy-App/" target="_blank" rel="noopener" class="dl-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
+            </svg>
+            View Source on GitHub
+          </a>
+          <span class="dl-sep">·</span>
+          <span class="dl-link">Licensed</span>
+          <span class="dl-sep">·</span>
+          <span class="dl-link">No Telemetry</span>
+        </div>
+      </div>
+
+      <div class="dl-checklist">
+        <div class="check-item"><span class="check-icon">✓</span> Self-contained EXE — no .NET SDK needed</div>
+        <div class="check-item"><span class="check-icon">✓</span> Starts silently in the system tray</div>
+        <div class="check-item"><span class="check-icon">✓</span> Optional "Start with Windows" via Registry</div>
+        <div class="check-item"><span class="check-icon">✓</span> Slots auto-saved to AppData on every change</div>
+        <div class="check-item"><span class="check-icon">✓</span> Single-instance protection (no duplicate processes)
+        </div>
+        <div class="check-item"><span class="check-icon">✓</span> View all slots via tray → "Slots Texts"</div>
+        <div class="check-item"><span class="check-icon">✓</span> 100% offline — zero network access</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container footer-inner">
+      <div class="footer-logo">
+        <svg width="22" height="22" viewBox="0 0 28 28" fill="none">
+          <rect x="4" y="2" width="16" height="22" rx="2" fill="none" stroke="#0078d4" stroke-width="2" />
+          <rect x="9" y="0" width="6" height="5" rx="1" fill="#0078d4" />
+          <text x="6" y="19" font-family="Inter" font-size="7" font-weight="700" fill="#0078d4">1-9</text>
+        </svg>
+        <span>SlotCopy</span>
+      </div>
+      <p class="footer-copy">Built with ❤️ for Windows power users. All Rights Reserved © 2026 DDurgeshmahajan.</p>
+      <div class="footer-links">
+        <a href="https://github.com/DDurgeshmahajan/Slot-Copy-App/" target="_blank" rel="noopener">GitHub</a>
+        <a href="#how-it-works">User Guide</a>
+        <a href="#tech">Architecture</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
