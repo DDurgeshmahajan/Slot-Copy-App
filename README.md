@@ -4,7 +4,7 @@
 
 [![Website](https://img.shields.io/badge/Website-Live-brightgreen?style=for-the-badge&logo=firebase)](https://slotcopyapp.web.app/)
 [![Platform](https://img.shields.io/badge/Platform-Windows-blue?style=for-the-badge&logo=windows)](https://github.com/DDurgeshmahajan/Slot-Copy-App)
-[![License](https://img.shields.io/badge/License-MIT-orange?style=for-the-badge)](LICENSE)
+
 
 SlotCopy reimagines clipboard management by moving away from the "History Model" to a "Slot Model," leveraging human spatial memory to eliminate the need for visual searching.
 
