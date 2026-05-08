@@ -16,6 +16,8 @@ SlotCopy is officially available for download via our landing page:
 
 The website provides a clean interface to explore features, view documentation, and get the latest stable build.
 
+> [!IMPORTANT]
+> **Windows SmartScreen Note:** Since SlotCopy is not yet digitally signed, you may see a "Windows protected your PC" blue screen. To proceed, simply click **"More info"** and then **"Run anyway"**.
 ---
 
 ## 💡 The Philosophy: Human Spatial Memory
@@ -30,10 +32,11 @@ Standard clipboard managers (including Windows' `Win+V`) rely on a shifting list
 ## 📖 User Guide
 
 ### 1. Installation & Setup
-1. Download the latest installer from [slotcopyapp.web.app](https://slotcopyapp.web.app/).
-2. Run `SlotCopy.exe`.
-3. Upon first run, a **Welcome Screen** will guide you through the basic shortcuts.
-4. The application lives in your **System Tray** (near the clock).
+1. Download the latest release from [slotcopyapp.web.app](https://slotcopyapp.web.app/).
+2. Run `SlotCopyApp.exe`.
+3. **If a blue "Windows protected your PC" screen appears:** Click **"More info"** then **"Run anyway"**.
+4. Upon first run, a **Welcome Screen** will guide you through the basic shortcuts.
+5. The application lives in your **System Tray** (near the clock).
 
 ### 2. Core Interaction Model
 SlotCopy uses timing-based hotkeys to stay out of your way until you need it.
@@ -98,6 +101,7 @@ graph TD
 - **Assets:** Contains the design tokens, logos, and high-quality mockups used across the project.
 
 ---
+**License:** Owned by Durgesh Mahajan and can be used for personal and commercial purposes. See `LICENSE` for more information.
 
 ## 📥 Development Setup
 If you wish to build SlotCopy from source:
@@ -108,15 +112,7 @@ If you wish to build SlotCopy from source:
 
 ---
 
-## 🤝 Contributing
-We welcome contributions!
-1. Fork the Project.
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`).
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`).
-4. Push to the Branch (`git push origin feature/AmazingFeature`).
-5. Open a Pull Request.
 
-**License:** Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
 <p align="center">
