@@ -6,9 +6,7 @@
 [![Platform](https://img.shields.io/badge/Platform-Windows-blue?style=for-the-badge&logo=windows)](https://github.com/DDurgeshmahajan/Slot-Copy-App)
 [![License](https://img.shields.io/badge/License-MIT-orange?style=for-the-badge)](LICENSE)
 
----
 
-![SlotCopy Hero](assets/hero.png)
 
 ## 🌐 Our Website is Live!
 We are excited to announce that SlotCopy is now officially available for download via our landing page:
